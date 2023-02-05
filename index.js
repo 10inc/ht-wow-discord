@@ -1,22 +1,22 @@
 const fs = require('fs')
-const path = require("node:path");
+const path = require('node:path')
 require('dotenv').config()
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
 
 const prefix = process.env.PREFIX || '!'
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 
 // UPDATED COMMAND HANDLING
 client.commands = new Collection()
-const commandsPath = path.join(__dirname, "commands");
+const commandsPath = path.join(__dirname, 'commands')
 const commandFiles = fs
   .readdirSync(commandsPath)
-  .filter((file) => file.endsWith(".js"));
+  .filter((file) => file.endsWith('.js'))
 
 for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file);
-  const command = require(filePath);
-  client.commands.set(command.data.name, command);
+  const filePath = path.join(commandsPath, file)
+  const command = require(filePath)
+  client.commands.set(command.data.name, command)
 }
 
 client.once('ready', () => {
@@ -26,29 +26,28 @@ client.once('ready', () => {
 // UPDATED SLASH LISTENER
 
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  if (!interaction.isChatInputCommand()) return
 
-  const command = interaction.client.commands.get(interaction.commandName);
+  const command = interaction.client.commands.get(interaction.commandName)
 
   if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
-    return;
+    console.error(`No command matching ${interaction.commandName} was found.`)
+    return
   }
 
   try {
-    await command.execute(interaction);
+    await command.execute(interaction)
   } catch (error) {
-    console.error(error);
+    console.error(error)
     await interaction.reply({
-      content: "There was an error while executing this command!",
-      ephemeral: true,
-    });
+      content: 'There was an error while executing this command!',
+      ephemeral: true
+    })
   }
-});
+})
 
 // LEGACY
-const cooldowns = new Collection();
-
+const cooldowns = new Collection()
 
 client.on('message', message => {
   if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type !== 'dm') return

@@ -1,19 +1,20 @@
 require('dotenv').config()
-const { SlashCommandBuilder } = require("discord.js");
-const mysql = require('mysql')
-
-const connection = mysql.createConnection(`mysql://${process.env.MYSQL_USER}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/acore_auth`)
+const { SlashCommandBuilder } = require('discord.js')
+const { connection } = require('../helpers/conn')
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("status")
-    .setDescription("Player count in HT WoW"),
-  async execute(interaction) {
+    .setName('status')
+    .setDescription('Player count in HT WoW'),
+  async execute (interaction) {
     connection.query('select count(online) from account where online = 1', (error, results, fields) => {
-      if (error) return interaction.reply("Something went wrong.")
+      if (error) {
+        console.error(error)
+        return interaction.reply('Something went wrong. Ask @MGMT for help.')
+      }
       return interaction.reply(
         `Players online: ${Object.values(results[0])[0]}`
-      );
+      )
     })
-  },
-};
+  }
+}
