@@ -1,6 +1,6 @@
-import sha1 from 'js-sha1'
-import crypto from 'crypto'
-import { BigInteger } from 'jsbn'
+const sha1 = require('js-sha1')
+const crypto = require('crypto')
+const { BigInteger } = require('jsbn')
 
 export function createVerifier (username, password, salt = null) {
   // https://gist.github.com/Treeston/db44f23503ae9f1542de31cb8d66781e
