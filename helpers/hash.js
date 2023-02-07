@@ -2,7 +2,7 @@ const sha1 = require('js-sha1')
 const crypto = require('crypto')
 const { BigInteger } = require('jsbn')
 
-export function createVerifier (username, password, salt = null) {
+function createVerifier (username, password, salt = null) {
   // https://gist.github.com/Treeston/db44f23503ae9f1542de31cb8d66781e
   const N = new BigInteger(
     '894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7',
@@ -37,6 +37,11 @@ export function createVerifier (username, password, salt = null) {
   return verifier
 }
 
-export function generateSalt () {
+function generateSalt () {
   return crypto.randomBytes(32)
 }
+
+module.exports = {
+  createVerifier: createVerifier,
+  generateSalt: generateSalt,
+};
