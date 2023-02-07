@@ -24,8 +24,8 @@ module.exports = {
 
     if (!username || !password) { return interaction.reply('Missing arguement for registration.') }
     let errorMessage = ''
-    if (username.length <= 3) { errorMessage = 'Username must be at least 3 characters long.' }
-    if (password.length <= 6) { errorMessage = 'Password must be at least 6 characters long.' }
+    if (username.length < 3) { errorMessage = 'Username must be at least 3 characters long.' }
+    if (password.length < 6 && password.length > 21 ) { errorMessage = 'Password must be 6-20 characters long.' }
     if (errorMessage) return interaction.reply(errorMessage)
 
     const salt = generateSalt()
@@ -39,6 +39,7 @@ module.exports = {
           console.error(error)
           return interaction.reply('Something went wrong when registering. Ask @MGMT for help.')
         } else {
+          console.log(`Account created: ${username}`)
           interaction.reply('Account created, you may login now.')
         }
       }
